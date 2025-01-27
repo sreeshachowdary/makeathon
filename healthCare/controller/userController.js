@@ -44,3 +44,18 @@ export const loginUser = async (req, res) => {
         res.status(400).send(err.message);
     }
 };
+
+export const getPatient = async(req, res) => {
+    try {
+        const patientId = req.params.id;
+        console.log('Fetching all patients');
+        const users = await Patient.findById(patientId);
+        if(!users){
+            res.status(404).send({message: 'Patient is not found'})
+        }
+        res.json(users);
+    } catch (err) {
+        console.error('Error fetching patient:', err);
+        res.status(500).send(err.message);
+    }
+}

@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const {body} = require('express-validator')
+const { registerUser, loginUser } = require('../controller/userController');
 const port = 8080 || process.env.port;
 
 app.use((req, res, next) => {
