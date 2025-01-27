@@ -1,5 +1,9 @@
+import { JWT_SECRET } from '../config/data';
+
 // const express = require('Express');
 const User = require('./model/userSchema');
+const Patient = require('./model/patientSchema')
+const Doctor = require('./model/doctorSchema')
 const {validationResult} = require('express-validator')
 
 export const registerUser = async() => {
@@ -9,13 +13,20 @@ export const registerUser = async() => {
     const { name, email, pwd, phoneNumber, address, bloodGroup, birthDate, adharCardNumber, role} = req.body;
    
     try {
+        const existingUser = await User.findOne({email});
+
+        if(existingUser){
+            return res.status(400).send({message:'User is already registered !!'})
+        }
         const hashedPassword = await bcrypt.hash(pwd, 10);
 
         const user = new User({ name, email, pwd: hashedPassword, phoneNumber, address, bloodGroup, birthDate, adharCardNumber, role});
         await user.save();
 
+        const token = jwt.sign({userId: user.id, email: user.email}, JWT_SECRET, {expiresIn:'1h'});
+
         console.log('User registered successfully !!', { email });
-        res.status(201).send({message:'User registered successfully !!'});
+        res.status(201).send({message:'User registered successfully !!'}, token)
     } catch (err) {
         console.error('Error while registering user:', err);
         res.status(400).send(err.message);
@@ -48,7 +59,7 @@ export const loginUser = async (req, res) => {
 export const getPatient = async(req, res) => {
     try {
         const patientId = req.params.id;
-        console.log('Fetching all patients');
+
         const users = await Patient.findById(patientId);
         if(!users){
             res.status(404).send({message: 'Patient is not found'})
@@ -56,6 +67,21 @@ export const getPatient = async(req, res) => {
         res.json(users);
     } catch (err) {
         console.error('Error fetching patient:', err);
+        res.status(500).send(err.message);
+    }
+}
+
+export const getDoctor = async(req, res) => {
+    try {
+        const doctorId = req.params.id;
+      
+        const user = await Doctor.findById(doctorId);
+        if(!user){
+            res.status(404).send({message: 'Doctor is not found'})
+        }
+        res.json(user);
+    } catch (err) {
+        console.error('Error fetching doctor:', err);
         res.status(500).send(err.message);
     }
 }
