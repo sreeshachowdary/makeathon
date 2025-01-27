@@ -2,11 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const {body} = require('express-validator')
-const { registerUser, loginUser, getDoctor, getPatient } = require('../controller/userController');
-const {PORT} = require('./config/data')
+const { registerUser, loginUser, getDoctor, getPatient } = require('./controller/userController');
+// const {PORT} = require('./config/data')
 const mongoConnect  = require('./config/database')
-
-// const port1 = PORT || process.env.port;
+const PORT = 8080;
 
 app.use((req, res, next) => {
 console.log("req--", req)
@@ -44,7 +43,7 @@ app.get(`/get-patient:${id}`, getPatient);
 //get doctor
 app.get(`/get-doctor:${id}`, getDoctor);
 
-app.listen((PORT) => {
+app.listen(PORT, () => {
     console.log(`App is connected to ${PORT}`)
 })
 

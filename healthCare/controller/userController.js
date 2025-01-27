@@ -1,10 +1,12 @@
-import { JWT_SECRET } from '../config/data';
+// import { JWT_SECRET } from '../config/data';
 
 // const express = require('Express');
 const User = require('./model/userSchema');
 const Patient = require('./model/patientSchema')
 const Doctor = require('./model/doctorSchema')
 const {validationResult} = require('express-validator')
+
+const JWT_SECRET = 'fdgsgfcgvhnaassew45567ghvnj8798nbvhff';
 
 export const registerUser = async() => {
     const errors = validationResult(req);
