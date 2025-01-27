@@ -1,14 +1,15 @@
 // import { JWT_SECRET } from '../config/data';
 
 // const express = require('Express');
-const User = require('./model/userSchema');
-const Patient = require('./model/patientSchema')
-const Doctor = require('./model/doctorSchema')
+// import User from'./model/userSchema';
+const User = require('../model/userModel')
+const Patient = require('../model/patientSchema')
+const Doctor = require('../model/doctorSchema')
 const {validationResult} = require('express-validator')
 
 const JWT_SECRET = 'fdgsgfcgvhnaassew45567ghvnj8798nbvhff';
 
-export const registerUser = async() => {
+const registerUser = async() => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -36,7 +37,7 @@ export const registerUser = async() => {
 }
 
 
-export const loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -58,7 +59,7 @@ export const loginUser = async (req, res) => {
     }
 };
 
-export const getPatient = async(req, res) => {
+const getPatient = async(req, res) => {
     try {
         const patientId = req.params.id;
 
@@ -73,7 +74,7 @@ export const getPatient = async(req, res) => {
     }
 }
 
-export const getDoctor = async(req, res) => {
+const getDoctor = async(req, res) => {
     try {
         const doctorId = req.params.id;
       
@@ -87,3 +88,5 @@ export const getDoctor = async(req, res) => {
         res.status(500).send(err.message);
     }
 }
+
+module.exports = {registerUser, loginUser, getDoctor, getPatient}
