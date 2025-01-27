@@ -9,11 +9,13 @@ const createPatient = async (data) => {
 
 // Function to update a patient
 const updatePatient = async (id, data) => {
-  const patient = await Patient.findById(id);
-  if (!patient) throw new Error('Patient not found');
-  Object.assign(patient, data); // Update patient fields
-  await patient.save();
-  return patient;
+  try{
+  const response = await Patient.updateOne({id:id},{$set: data})
+  return response
+}
+catch(e){
+  throw new error(e.message)
+}
 };
 
 // Function to get a patient by ID
